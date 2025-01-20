@@ -1,15 +1,20 @@
 [tool.poetry]
-name = "fastapi-test"
+name = "FastAPI_test"
 version = "0.1.0"
 description = ""
+package-mode = false
 authors = ["igoruxa007 <igoruxa007@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = {extras = ["statndart"], version = "^0.115.6"}
 uvicorn = "^0.34.0"
 pre-commit = "^4.0.1"
+pydantic = "^2.10.5"
+sqlalchemy = "^2.0.37"
+fastapi = "^0.115.6"
+psycopg2-binary = "^2.9.10"
+alembic = "^1.14.0"
 
 
 [build-system]
