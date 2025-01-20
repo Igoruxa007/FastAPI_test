@@ -1,2 +1,2 @@
 run:
-	uvicorn --port 5000 main:app --reload
+	uvicorn --port 5000 app.main:app --reload
