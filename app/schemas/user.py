@@ -4,11 +4,13 @@ from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
-    name: str
+    first_name: str
 
 
 class User(UserBase):
     id: int
+    surname: str
+    is_superuser: bool
 
     class Config:
         orm_mod = True
