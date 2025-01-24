@@ -10,7 +10,14 @@ class UserBase(BaseModel):
 class User(UserBase):
     id: int
     surname: str
-    is_superuser: bool
 
     class Config:
         orm_mod = True
+
+
+class UserCreate(User):
+    ...
+
+
+class UserUpdate(User):
+    ...
