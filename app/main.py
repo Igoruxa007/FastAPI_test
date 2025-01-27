@@ -5,8 +5,8 @@ from fastapi import Depends
 from fastapi import FastAPI
 from sqlalchemy.orm import Session
 
+from app import crud
 from app.dependencies import get_db
-# from app import crud
 
 
 app = FastAPI(
@@ -28,8 +28,8 @@ def read_user(user_id: int, q: str | None = None) -> dict:
 
 @api_router.post('/cusers/{user_id}')
 def create_user(db: Session = Depends(get_db)) -> dict:
-    user_name = {'first_name': 'first', 'id': 3, 'surname': 'surn'}
-    # u = crud.user.create(db=db, obj_in=user_name)
+    user_name = {'first_name': 'first', 'id': 1, 'surname': 'surn'}
+    crud.user.create(db=db, obj_in=user_name)
     return user_name
 
 
