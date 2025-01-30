@@ -17,6 +17,9 @@ psycopg2-binary = "^2.9.10"
 alembic = "^1.14.0"
 flake8 = "^7.1.1"
 mypy = "^1.14.1"
+pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
+httpx = "^0.28.1"
 
 
 [build-system]

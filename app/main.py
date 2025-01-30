@@ -36,8 +36,11 @@ def read_user(user_id: int, q: str | None = None, db: Session = Depends(get_db))
 
 
 @api_router.post('/cusers/{user_id}', response_model=User)
-def create_user(db: Session = Depends(get_db)) -> dict:
-    user_name = {'first_name': 'first6', 'id': 7, 'surname': 'surn6', 'is_superuser': False}
+def create_user(user_id: int, db: Session = Depends(get_db)) -> dict:
+    user_name = {
+        'first_name': f'first {user_id}', 'id': user_id,
+        'surname': f'surn {user_id}', 'is_superuser': False,
+    }
     return user.user_inst.create(db=db, obj_in=UserCreate.model_validate(user_name))
 
 
