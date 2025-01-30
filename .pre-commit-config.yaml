@@ -43,4 +43,4 @@ repos:
     hooks:
     -   id: mypy
         additional_dependencies: [types-pyyaml]
-        exclude: ^testing/resources/|alembic
+        exclude: ^tests|alembic
