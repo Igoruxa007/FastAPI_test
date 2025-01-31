@@ -22,8 +22,11 @@ class UserCreate(User):
     ...
 
 
-class UserUpdate(User):
-    ...
+class UserUpdate(BaseModel):
+    id: int
+    first_name: str
+    surname: str
+    is_superuser: bool
 
 
 class UserMulti(BaseModel):
