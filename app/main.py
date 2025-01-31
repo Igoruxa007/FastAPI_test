@@ -38,29 +38,32 @@ def read_user(user_id: int, q: str | None = None, db: Session = Depends(get_db))
     return user.user_inst.get(db=db, id=user_id)
 
 
-@api_router.post('/cusers/{user_id}', response_model=User)
-def create_user(user_id: int, db: Session = Depends(get_db)) -> dict:
-    user_name = {
-        'first_name': f'first {user_id}', 'id': user_id,
-        'surname': f'surn {user_id}', 'is_superuser': False,
-    }
-    return user.user_inst.create(db=db, obj_in=UserCreate.model_validate(user_name))
+@api_router.post('/', response_model=User)
+def create_user(user_in: UserCreate, db: Session = Depends(get_db)) -> dict:
+    user_db = user.user_inst.get(db, id=user_in.id)
+    if user_db:
+        raise HTTPException(
+            status_code=400, detail=f'User with ID: {user_in.id} already exists.',
+        )
+    crated_user = user.user_inst.create(db=db, obj_in=user_in)
+    db.commit()
+    return crated_user
 
 
 @api_router.put('/', status_code=201, response_model=User)
-def update_recipe(
+def update_user(
     *,
-    recipe_in: UserUpdate,
+    user_in: UserUpdate,
     db: Session = Depends(get_db),
 ) -> dict:
-    recipe = user.user_inst.get(db, id=recipe_in.id)
-    if not recipe:
+    user_db = user.user_inst.get(db, id=user_in.id)
+    if not user_db:
         raise HTTPException(
-            status_code=400, detail=f'Recipe with ID: {recipe_in.id} not found.',
+            status_code=400, detail=f'User with ID: {user_in.id} not found.',
         )
-    updated_recipe = user.user_inst.update(db=db, db_obj=recipe, obj_in=recipe_in)
+    updated_user = user.user_inst.update(db=db, db_obj=user_db, obj_in=user_in)
     db.commit()
-    return updated_recipe
+    return updated_user
 
 
 @api_router.delete('/users/{user_id}', response_model=User)
