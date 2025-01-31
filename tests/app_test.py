@@ -47,12 +47,12 @@ def test_root_route():
 
 
 def test_create(test_db):
-    response = client.post('/cusers/4')
-    response = client.post('/cusers/3')
+    response = client.post('/', json={'first_name': 'Fourth', 'surname': 'Fourth_sur', 'is_superuser': False, 'id': 4})
+    response = client.post('/', json={'first_name': 'Third', 'surname': 'Third_sur', 'is_superuser': False, 'id': 3})
     assert response.status_code == 200
     assert response.json() == {
-        'first_name': 'first 3',
-        'surname': 'surn 3',
+        'first_name': 'Third',
+        'surname': 'Third_sur',
         'is_superuser': False,
         'id': 3,
     }
@@ -62,8 +62,8 @@ def test_get(test_db):
     response = client.get('/users/3')
     assert response.status_code == 200
     assert response.json() == {
-        'first_name': 'first 3',
-        'surname': 'surn 3',
+        'first_name': 'Third',
+        'surname': 'Third_sur',
         'is_superuser': False,
         'id': 3,
     }
@@ -75,14 +75,14 @@ def test_get_multi(test_db):
     assert response.json() == {
         'results': [
             {
-                'first_name': 'first 3',
-                'surname': 'surn 3',
+                'first_name': 'Third',
+                'surname': 'Third_sur',
                 'is_superuser': False,
                 'id': 3,
             },
             {
-                'first_name': 'first 4',
-                'surname': 'surn 4',
+                'first_name': 'Fourth',
+                'surname': 'Fourth_sur',
                 'is_superuser': False,
                 'id': 4,
             },
@@ -90,12 +90,29 @@ def test_get_multi(test_db):
     }
 
 
+def test_update(test_db):
+    response = client.put('/', json={'id': 4, 'first_name': 'one', 'surname': 'two', 'is_superuser': False})
+    assert response.status_code == 201
+    assert response.json() == {
+        'first_name': 'one',
+        'surname': 'two',
+        'is_superuser': False,
+        'id': 4,
+    }
+
+
+def test_fail_update(test_db):
+    response = client.put('/', json={'id': 40, 'first_name': 'one', 'surname': 'two', 'is_superuser': False})
+    assert response.status_code == 400
+    assert response.json() == {'detail': 'User with ID: 40 not found.'}
+
+
 def test_delete(test_db):
     response = client.delete('/users/3')
     assert response.status_code == 200
     assert response.json() == {
-        'first_name': 'first 3',
-        'surname': 'surn 3',
+        'first_name': 'Third',
+        'surname': 'Third_sur',
         'is_superuser': False,
         'id': 3,
     }
