@@ -47,8 +47,8 @@ def test_root_route():
 
 
 def test_create(test_db):
-    response = client.post('/', json={'first_name': 'Fourth', 'surname': 'Fourth_sur', 'is_superuser': False, 'id': 4})
-    response = client.post('/', json={'first_name': 'Third', 'surname': 'Third_sur', 'is_superuser': False, 'id': 3})
+    response = client.post('/api/v1/users/', json={'first_name': 'Fourth', 'surname': 'Fourth_sur', 'is_superuser': False, 'id': 4})
+    response = client.post('/api/v1/users/', json={'first_name': 'Third', 'surname': 'Third_sur', 'is_superuser': False, 'id': 3})
     assert response.status_code == 200
     assert response.json() == {
         'first_name': 'Third',
@@ -59,7 +59,7 @@ def test_create(test_db):
 
 
 def test_get(test_db):
-    response = client.get('/users/3')
+    response = client.get('/api/v1/users/users/3')
     assert response.status_code == 200
     assert response.json() == {
         'first_name': 'Third',
@@ -70,7 +70,7 @@ def test_get(test_db):
 
 
 def test_get_multi(test_db):
-    response = client.get('/users/')
+    response = client.get('/api/v1/users/users/')
     assert response.status_code == 200
     assert response.json() == {
         'results': [
@@ -91,7 +91,7 @@ def test_get_multi(test_db):
 
 
 def test_update(test_db):
-    response = client.put('/', json={'id': 4, 'first_name': 'one', 'surname': 'two', 'is_superuser': False})
+    response = client.put('/api/v1/users/', json={'id': 4, 'first_name': 'one', 'surname': 'two', 'is_superuser': False})
     assert response.status_code == 201
     assert response.json() == {
         'first_name': 'one',
@@ -102,13 +102,13 @@ def test_update(test_db):
 
 
 def test_fail_update(test_db):
-    response = client.put('/', json={'id': 40, 'first_name': 'one', 'surname': 'two', 'is_superuser': False})
+    response = client.put('/api/v1/users/', json={'id': 40, 'first_name': 'one', 'surname': 'two', 'is_superuser': False})
     assert response.status_code == 400
     assert response.json() == {'detail': 'User with ID: 40 not found.'}
 
 
 def test_delete(test_db):
-    response = client.delete('/users/3')
+    response = client.delete('/api/v1/users/users/3')
     assert response.status_code == 200
     assert response.json() == {
         'first_name': 'Third',
