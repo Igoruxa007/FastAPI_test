@@ -1,8 +1,8 @@
-"""Transition to SQLite
+"""Added email to user without nullable
 
-Revision ID: ab6105190495
-Revises: 727bd23a2343
-Create Date: 2025-01-29 08:05:51.947064
+Revision ID: 30ce576f4e53
+Revises: 18e97a8f5a65
+Create Date: 2025-02-04 08:29:13.619007
 
 """
 from __future__ import annotations
@@ -16,8 +16,8 @@ from alembic import op
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'ab6105190495'
-down_revision: str | None = '727bd23a2343'
+revision: str = '30ce576f4e53'
+down_revision: str | None = '18e97a8f5a65'
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
@@ -29,9 +29,11 @@ def upgrade() -> None:
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('first_name', sa.String(), nullable=True),
         sa.Column('surname', sa.String(), nullable=True),
+        sa.Column('email', sa.String(), nullable=True),
         sa.Column('is_superuser', sa.Boolean(), nullable=True),
         sa.PrimaryKeyConstraint('id'),
     )
+    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=False)
     op.create_index(op.f('ix_users_first_name'), 'users', ['first_name'], unique=False)
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
     op.create_index(op.f('ix_users_surname'), 'users', ['surname'], unique=False)
@@ -43,5 +45,6 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_users_surname'), table_name='users')
     op.drop_index(op.f('ix_users_id'), table_name='users')
     op.drop_index(op.f('ix_users_first_name'), table_name='users')
+    op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
     # ### end Alembic commands ###

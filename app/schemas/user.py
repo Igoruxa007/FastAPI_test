@@ -8,6 +8,7 @@ from pydantic import BaseModel
 class UserBase(BaseModel):
     first_name: str
     surname: str
+    email: str
     is_superuser: bool
 
 
@@ -22,7 +23,7 @@ class UserCreate(User):
     ...
 
 
-class UserUpdate(User):
+class UserUpdate(UserBase):
     ...
 
 

@@ -14,4 +14,5 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String, index=True)
     surname = Column(String, index=True)
+    email = Column(String, index=True, nullable=False)
     is_superuser = Column(Boolean, default=False)
