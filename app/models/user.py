@@ -16,3 +16,4 @@ class User(Base):
     surname = Column(String, index=True)
     email = Column(String, index=True, nullable=False)
     is_superuser = Column(Boolean, default=False)
+    hashed_password = Column(String, nullable=False)

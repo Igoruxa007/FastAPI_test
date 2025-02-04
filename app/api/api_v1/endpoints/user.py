@@ -8,7 +8,6 @@ from sqlalchemy.orm import Session
 from app.crud import user
 from app.dependencies import get_db
 from app.schemas.user import User
-from app.schemas.user import UserCreate
 from app.schemas.user import UserMulti
 from app.schemas.user import UserUpdate
 
@@ -21,7 +20,7 @@ def read_users(db: Session = Depends(get_db)) -> dict:
     return {'results': results}
 
 
-@api_router.get('/users/{user_id}', response_model=User)
+@api_router.get('/user/{user_id}', response_model=User)
 def read_user(user_id: int, q: str | None = None, db: Session = Depends(get_db)) -> User | None:
     return user.user_inst.get(db=db, id=user_id)
 
@@ -29,18 +28,6 @@ def read_user(user_id: int, q: str | None = None, db: Session = Depends(get_db))
 @api_router.get('/user_email/{user_email}', response_model=User)
 def read_user_by_email(user_email: str, q: str | None = None, db: Session = Depends(get_db)) -> User | None:
     return user.user_inst.get_by_email(db=db, email=user_email)
-
-
-@api_router.post('/', response_model=User)
-def create_user(user_in: UserCreate, db: Session = Depends(get_db)) -> dict:
-    user_db = user.user_inst.get_by_email(db, email=user_in.email)
-    if user_db:
-        raise HTTPException(
-            status_code=400, detail=f'User with email: {user_in.email} already exists.',
-        )
-    crated_user = user.user_inst.create(db=db, obj_in=user_in)
-    db.commit()
-    return crated_user
 
 
 @api_router.put('/', status_code=201, response_model=User)
