@@ -10,7 +10,7 @@ readme = "README.md"
 python = "^3.11"
 uvicorn = "^0.34.0"
 pre-commit = "^4.0.1"
-pydantic = "^2.10.5"
+pydantic = {extras = ["email"], version = "^2.10.6"}
 sqlalchemy = "^2.0.37"
 fastapi = "^0.115.6"
 psycopg2-binary = "^2.9.10"
@@ -20,6 +20,8 @@ mypy = "^1.14.1"
 pytest = "^8.3.4"
 pytest-cov = "^6.0.0"
 httpx = "^0.28.1"
+passlib = "^1.7.4"
+bcrypt = "^4.2.1"
 
 
 [build-system]

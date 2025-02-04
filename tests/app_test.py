@@ -47,8 +47,8 @@ def test_root_route():
 
 
 def test_create(test_db):
-    response = client.post('/api/v1/users/', json={'first_name': 'Fourth', 'surname': 'Fourth_sur', 'email': '1@m.com', 'is_superuser': False, 'id': 4})
-    response = client.post('/api/v1/users/', json={'first_name': 'Third', 'surname': 'Third_sur', 'email': '2@m.com', 'is_superuser': False, 'id': 3})
+    response = client.post('/api/v1/auth/signup', json={'first_name': 'Fourth', 'surname': 'Fourth_sur', 'email': '1@m.com', 'is_superuser': False, 'id': 4, 'password': '123'})
+    response = client.post('/api/v1/auth/signup', json={'first_name': 'Third', 'surname': 'Third_sur', 'email': '2@m.com', 'is_superuser': False, 'id': 3, 'password': '123'})
     assert response.status_code == 200
     assert response.json() == {
         'first_name': 'Third',
@@ -60,7 +60,7 @@ def test_create(test_db):
 
 
 def test_get(test_db):
-    response = client.get('/api/v1/users/users/3')
+    response = client.get('/api/v1/users/user/3')
     assert response.status_code == 200
     assert response.json() == {
         'first_name': 'Third',

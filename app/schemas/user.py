@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from pydantic import BaseModel
+from pydantic import EmailStr
 
 
 class UserBase(BaseModel):
@@ -19,8 +20,10 @@ class User(UserBase):
         orm_mod = True
 
 
-class UserCreate(User):
-    ...
+class UserCreate(UserBase):
+    id: int
+    email: EmailStr
+    password: str
 
 
 class UserUpdate(UserBase):
