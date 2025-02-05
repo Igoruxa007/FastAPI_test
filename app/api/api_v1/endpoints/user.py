@@ -6,6 +6,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.crud import user
+from app.dependencies import get_current_user
 from app.dependencies import get_db
 from app.schemas.user import User
 from app.schemas.user import UserMulti
@@ -15,9 +16,12 @@ api_router = APIRouter()
 
 
 @api_router.get('/users/', response_model=UserMulti)
-def read_users(db: Session = Depends(get_db)) -> dict:
-    results = user.user_inst.get_multi(db=db)
-    return {'results': results}
+def read_users(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)) -> dict:
+    if current_user.is_superuser:
+        results = user.user_inst.get_multi(db=db)
+        return {'results': results}
+    else:
+        raise HTTPException(status_code=403, detail='Permissions denied')
 
 
 @api_router.get('/user/{user_id}', response_model=User)
