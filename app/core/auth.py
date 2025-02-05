@@ -4,7 +4,6 @@ from collections.abc import MutableMapping
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
-from typing import Any
 from typing import Union
 
 from fastapi.security import OAuth2PasswordBearer
@@ -48,7 +47,7 @@ def _create_token(
         lifetime: timedelta,
         sub: str,
 ) -> str:
-    payload : dict[str, Any] = {}
+    payload : dict[str, str | datetime] = {}
     expire = datetime.now(timezone.utc) + lifetime
     payload['type'] = token_type
     payload['exp'] = expire
