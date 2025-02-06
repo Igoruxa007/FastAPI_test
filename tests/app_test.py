@@ -6,8 +6,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.db.base_class import Base
+from app.dependencies import get_current_user
 from app.dependencies import get_db
 from app.main import app
+from app.models.user import User
 
 SQLALCHEMY_DATABASE_URL = 'sqlite:///./test.db'
 
@@ -83,7 +85,16 @@ def test_get_by_email(test_db):
     }
 
 
+def test_get_multi_unauth(test_db):
+    response = client.get('/api/v1/users/users/')
+    assert response.status_code == 401
+
+
 def test_get_multi(test_db):
+    def ovverride_get_current_user():
+        return User(id=11, first_name='dsad', surname='sdfsd', email='12@m.com', is_superuser=True, hashed_password='sdfsdfsdfsdfs')
+    app.dependency_overrides[get_current_user] = ovverride_get_current_user
+
     response = client.get('/api/v1/users/users/')
     assert response.status_code == 200
     assert response.json() == {
