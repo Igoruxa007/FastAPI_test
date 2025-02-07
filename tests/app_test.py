@@ -61,7 +61,7 @@ def test_create(test_db):
     }
 
 
-def test_get(test_db):
+def test_get():
     response = client.get('/api/v1/users/user/3')
     assert response.status_code == 200
     assert response.json() == {
@@ -73,7 +73,7 @@ def test_get(test_db):
     }
 
 
-def test_get_by_email(test_db):
+def test_get_by_email():
     response = client.get('/api/v1/users/user_email/2@m.com')
     assert response.status_code == 200
     assert response.json() == {
@@ -85,12 +85,43 @@ def test_get_by_email(test_db):
     }
 
 
-def test_get_multi_unauth(test_db):
+def test_get_multi_unauth():
     response = client.get('/api/v1/users/users/')
+    assert response.status_code == 401
+    assert response.json() == {'detail': 'Not authenticated'}
+
+
+def test_login_incorrect():
+    response = client.post(
+        '/api/v1/auth/login', data={
+            'grant_type': 'password', 'username': 11, 'password': 11, 'scope': '', 'client_id': 'string', 'client_secret': 'string',
+        },
+    )
+    assert response.status_code == 400
+    assert response.json() == {'detail': 'Incorrect username or password'}
+
+
+def test_get_multi_not_auth():
+    response = client.get('/api/v1/users/users/')
+    assert response.status_code == 401
+    assert response.json() == {'detail': 'Not authenticated'}
+
+
+def test_get_own_page_false():
+    response = client.get('/api/v1/auth/me')
     assert response.status_code == 401
 
 
-def test_get_multi(test_db):
+def test_login_correct():
+    response = client.post(
+        '/api/v1/auth/login', data={
+            'grant_type': 'password', 'username': '1@m.com', 'password': 123, 'scope': '', 'client_id': 'string', 'client_secret': 'string',
+        },
+    )
+    assert response.status_code == 200
+
+
+def test_get_multi_auth():
     def ovverride_get_current_user():
         return User(id=11, first_name='dsad', surname='sdfsd', email='12@m.com', is_superuser=True, hashed_password='sdfsdfsdfsdfs')
     app.dependency_overrides[get_current_user] = ovverride_get_current_user
@@ -117,7 +148,12 @@ def test_get_multi(test_db):
     }
 
 
-def test_update(test_db):
+def test_get_own_page_accept():
+    response = client.get('/api/v1/auth/me')
+    assert response.status_code == 200
+
+
+def test_update():
     response = client.put('/api/v1/users/', json={'first_name': 'one', 'surname': 'two', 'email': '1@m.com', 'is_superuser': False})
     assert response.status_code == 201
     assert response.json() == {
@@ -129,13 +165,13 @@ def test_update(test_db):
     }
 
 
-def test_fail_update(test_db):
+def test_fail_update():
     response = client.put('/api/v1/users/', json={'first_name': 'one', 'surname': 'two', 'email': '10@m.com', 'is_superuser': False})
     assert response.status_code == 400
     assert response.json() == {'detail': 'User with email: 10@m.com not found.'}
 
 
-def test_delete(test_db):
+def test_delete():
     response = client.delete('/api/v1/users/users/4')
     assert response.status_code == 200
     assert response.json() == {

@@ -17,7 +17,7 @@ api_router = APIRouter()
 
 @api_router.get('/users/', response_model=UserMulti)
 def read_users(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)) -> dict:
-    if current_user.is_superuser:
+    if current_user:
         results = user.user_inst.get_multi(db=db)
         return {'results': results}
     else:
